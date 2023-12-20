@@ -2,10 +2,21 @@ import csv
 import string
 import sys
 import os.path
+import argparse
 
-DELIMITER = ';'
+# Parse arguments
+parser = argparse.ArgumentParser(
+                    prog='find-diacritics',
+                    description='Find records containing image links with non-ASCII characters',
+                    epilog='Example: python find-diacritics -d , input.csv')
+parser.add_argument('filename')
+parser.add_argument('-d', '--delimiter', default=';')
+args = parser.parse_args()
 
-filename = sys.argv[1]
+# Default values
+DELIMITER = args.delimiter;
+filename = args.filename
+
 if not os.path.isfile(filename):
     print('File', filename, ' does not exist!')
     print('Enter: python ', sys.argv[0], ' filename.csv')
