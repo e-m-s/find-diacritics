@@ -22,23 +22,22 @@ if not os.path.isfile(filename):
     print('Enter: python ', sys.argv[0], ' filename.csv')
     exit()
 
+def containsLinkWithDiacritics(record):
+    for itemstring in record:
+        if itemstring.startswith('http') or 'emco.cz' in itemstring or '.jpg' in itemstring:
+            for char in itemstring:
+                if not char in string.printable:
+                    return True
+    return False    
 
-# Otevřeme soubor pro čtení
+
+# Open file
 with open(filename, 'r', encoding='utf-8') as csvfile:
 
-    # Vytvoříme čtečku CSV
+    # Use CSV reader to parse
     reader = csv.reader(csvfile, delimiter=DELIMITER)
 
-    # Pro každý řádek v souboru
-    for row in reader:
-        printme = False
-        # Zjistíme, zda řádek obsahuje znak s diakritikou
-        for itemstring in row:
-            if itemstring.startswith('http') or 'emco.cz' in itemstring or '.jpg' in itemstring:
-#                print(itemstring)
-                for char in itemstring:
-                    if not char in string.printable:
-                        # Pokud ano, vypíšeme ho
-                        printme = True
-        if printme:
-           print(DELIMITER.join(row))
+    # Test each record:
+    for record in reader:
+        if containsLinkWithDiacritics(record):
+           print(DELIMITER.join(record))
